@@ -19,7 +19,7 @@ Geocentric, topocentric.
 
 
 ### Install
-- edit src/main/[settings.properties](/todo) and set path to ephemeris
+- edit src/main/[settings.properties](https://github.com/Kibo/AstroAPI/blob/master/src/main/resources/settings.properties) and set path to ephemeris
 - mvn build
 - mvn package
 - mvn javadoc:javadoc
