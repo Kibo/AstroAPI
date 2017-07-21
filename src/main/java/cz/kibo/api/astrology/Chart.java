@@ -172,9 +172,9 @@ public class Chart {
 	 * @see seasnam.txt You can get a list of names from http://cfa-www.harvard.edu/iau/lists/MPNames.html, which you would like to rename to seasnam.txt and move to your ephemeris directory.
 	 */
 	private String getPlanetName(int planet) {	
-		//TODO
-		/*
-		 String name = sw.swe_get_planet_name(planet);
+		
+		// TODO
+		String name = sw.swe_get_planet_name(planet);
 		
 		if(planet == SweConst.SE_MEAN_APOG){
 			name = "Lilith";
@@ -183,8 +183,7 @@ public class Chart {
 		if(planet == SweConst.SE_MEAN_NODE){
 			name = "NNode";
 		}
-		 */
-				
-		return sw.swe_get_planet_name(planet);
+		 				
+		return name;
 	}
 }

@@ -1,5 +1,5 @@
 # AstroAPI
-The AstroAPI is a simple API allowing consumers to get planets and cusps positions. The AstroAPI uses Swiss Ephemeris library port to Java by [Thomas Mack](http://th-mack.de/). It creates clear and tested API over this library.
+The AstroAPI is a simple API allowing consumers to get planets and cusps positions. The AstroAPI uses Swiss Ephemeris library port to Java by [Thomas Mack](http://th-mack.de/). AstroAPI is clear and tested API over this library.
 
 **Planets**:
 Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Chiron, Lilith, NNode.
@@ -19,7 +19,7 @@ Geocentric, topocentric.
 
 
 ### Install
-- edit src/main/[settings.properties](https://github.com/Kibo/AstroAPI/blob/master/src/main/resources/settings.properties) and set path to ephemeris
+- [set path](https://github.com/Kibo/AstroAPI/blob/master/src/main/resources/settings.properties) to ephemeris
 - mvn build
 - mvn package
 - mvn javadoc:javadoc
