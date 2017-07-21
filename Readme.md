@@ -8,7 +8,10 @@ Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Chiron
 Campanus, Koch, Morinus, Porphyry, Placidus, Equal. TODO
 
 **Coordinate systems**
-Geocentric, topocentric.
+Geocentric, Topocentric.
+
+**Zodiac type**
+Tropical, Sidereal(Fagan/Bradley)
 
 ### Version: 0.0.1-SNAPSHOT
 

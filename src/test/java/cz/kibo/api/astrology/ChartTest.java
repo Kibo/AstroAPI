@@ -13,15 +13,18 @@ import swisseph.SweConst;
 
 public class ChartTest {
 	
+	final double LONGITUDE = 16.0542676;
+	final double LATITUDE = 48.8559107;
+	final double GEOALT = 286;
+	
 	private static final double DELTA = 1e-15;
 
 	@Test
 	public void planetsGeocentricTest() {
 		
-		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 17, 00 );
+		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 16, 20);
 		
-		List<Integer> planets = new ArrayList<Integer>();
-		
+		List<Integer> planets = new ArrayList<Integer>();		
 		planets.add( SweConst.SE_SUN );
 		planets.add( SweConst.SE_JUPITER );
 					
@@ -37,6 +40,34 @@ public class ChartTest {
 		assertTrue( data.get("Jupiter").get(1) < 0 ); // Retrograde
 		
 		assertEquals(0, data.get("Sun").get(0).intValue()); //Spring is comming 
+		
+		System.out.println("cz.kibo.api.astrologyChartTest.planetsGeocentricTest() -> Sun geocentric: " + data.get("Sun").get(0));
+	}
+	
+	@Test
+	public void planetTopocentricTest() {
+		
+		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 16, 20);
+		Coordinates coords = new Coordinates(LONGITUDE, LATITUDE, GEOALT);
+		
+		List<Integer> planets = new ArrayList<Integer>();		
+		planets.add( SweConst.SE_SUN );
+		planets.add( SweConst.SE_JUPITER );
+		
+		Chart chart = new Chart(event, planets, coords);
+		Map<String, List<Double>> data = chart.getPlanets();
+		
+		assertEquals(2, data.size());
+		
+		assertTrue("Sun",data.containsKey("Sun"));
+		assertTrue("Jupiter",data.containsKey("Jupiter"));
+			
+		assertTrue( data.get("Sun").get(1) > 0 );
+		assertTrue( data.get("Jupiter").get(1) < 0 ); // Retrograde
+		
+		assertEquals(0, data.get("Sun").get(0).intValue()); //Spring is comming 	
+		
+		System.out.println("cz.kibo.api.astrologyChartTest.planetsTopocentricTest() -> Sun topocentric: " + data.get("Sun").get(0));
 	}
 	
 	@Test

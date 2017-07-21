@@ -8,14 +8,14 @@ public class Coordinates {
     
     /**
      * 
-     * @param lat The Latitude in degrees 
      * @param lon The Longitude in degrees
+     * @param lat The Latitude in degrees 
      * @param geoalt The height above sea level in meters
      */
-    public Coordinates(double lat, double lon, double geoalt) {
+    public Coordinates(double lon, double lat, double geoalt) {
     	super();        
-    	this.latitude = lat;
-    	this.longitude = lon;        
+    	this.longitude = lon;
+    	this.latitude = lat;    	        
         this.geoalt = geoalt;
     }
 

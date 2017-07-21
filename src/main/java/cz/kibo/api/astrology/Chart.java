@@ -12,7 +12,6 @@ import swisseph.SweConst;
 import swisseph.SweDate;
 import swisseph.SwissEph;
 
-
 /**
  * Represents an ephemeris data at a certain date and time. All time events - input and output - are in Universal Time (UT).
  * 
@@ -35,7 +34,7 @@ public class Chart {
 	private SweDate sd;
 	
 	/**
-	 * Calculates positions of planets in geocentric coordinate.
+	 * Calculates planets positions. Planets in geocentric cordinate system.
 	 * 
 	 * @param event The date and the time of the event in Universal Time (UT).
 	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.
@@ -55,22 +54,7 @@ public class Chart {
 	}
 	
 	/**
-	 * Calculates positions of planets and cusps in geocentric coordinate.
-	 * 
-	 * @param event The date and the time of the event in Universal Time (UT).
-	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.
-	 * @param houseSystem The house system as a character given as an integer. Constant from {@link swisseph.SweConst} 
-	 * @see swisseph.SweConst
-	 */
-	public Chart( LocalDateTime event, List<Integer> planets, Integer houseSystem ) {
-		super();
-		this.event = event;
-		this.planets = planets;		
-		this.houseSystem = houseSystem;								
-	}
-	
-	/**
-	 * Calculates positions of planets in topocentric coordinate.
+	 * Calculates planets positions. Planets in topocentric cordinate system.
 	 * 
 	 * @param event The date and the time of the event in Universal Time (UT).
 	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.	
@@ -82,18 +66,46 @@ public class Chart {
 		this.event = event;
 		this.planets = planets;										
 		this.coords = coords;
+		
+		sw = new SwissEph( getPathToEphemeris() );
+		sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());
+		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0, SweDate.SE_GREG_CAL);
+		
+		// iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED  | SEFLG_EQUATORIAL;
+		int flags = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_TOPOCTR | SweConst.SEFLG_SPEED ;
+								
+		this.planetsPositions = calculatePlanets( planets, sw, sd, flags);	
+		
+		
 	}
-					
+		
 	/**
-	 * Calculates positions of planets and cusps in topocentric coordinate.
+	 * Calculates planets and cusps positions. Planets in geocenntric cordinate system.
 	 * 
 	 * @param event The date and the time of the event in Universal Time (UT).
 	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.
-	 * @param houseSystem The house system as a character given as an integer. Constant from {@link swisseph.SweConst}. 
+	 * @param houseSystem The house system as a character given as an integer. Constant from {@link swisseph.SweConst} 
 	 * @param coords longitude, latitude, geoalt for topocentric. Calculations relative to the observer on some place on the earth rather than relative to the center of the earth.
 	 * @see swisseph.SweConst
 	 */
 	public Chart( LocalDateTime event, List<Integer> planets, Integer houseSystem, Coordinates coords) {
+		super();
+		this.event = event;
+		this.planets = planets;		
+		this.houseSystem = houseSystem;								
+	}
+					
+	/**
+	 * Calculates planets and cusps positions. Planets in topocentric cordinate system.
+	 * 
+	 * @param event The date and the time of the event in Universal Time (UT).
+	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.
+	 * @param coords longitude, latitude, geoalt for topocentric. Calculations relative to the observer on some place on the earth rather than relative to the center of the earth.
+	 * @param houseSystem The house system as a character given as an integer. Constant from {@link swisseph.SweConst}.  
+	 * 
+	 * @see swisseph.SweConst
+	 */
+	public Chart( LocalDateTime event, List<Integer> planets, Coordinates coords, Integer houseSystem) {
 		super();
 		this.event = event;
 		this.planets = planets;				
@@ -168,12 +180,10 @@ public class Chart {
 	/*
 	 * @param planet - int from swisseph.SweConst
 	 * 
-	 * @see swisseph.SwissEph.swe_get_planet_name(int ipl)
-	 * @see seasnam.txt You can get a list of names from http://cfa-www.harvard.edu/iau/lists/MPNames.html, which you would like to rename to seasnam.txt and move to your ephemeris directory.
+	 * @see swisseph.SwissEph.swe_get_planet_name(int ipl)	
 	 */
 	private String getPlanetName(int planet) {	
-		
-		// TODO
+				
 		String name = sw.swe_get_planet_name(planet);
 		
 		if(planet == SweConst.SE_MEAN_APOG){
