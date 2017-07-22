@@ -71,6 +71,110 @@ public class ChartTest {
 	}
 	
 	@Test
+	public void planetsGeocentricWithIflagTest() {
+		
+		final int PLACIDUS_HOUSE_SYSTEM = 'P';
+		
+		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 16, 20);
+		Coordinates coords = new Coordinates(LONGITUDE, LATITUDE, GEOALT);
+		
+		List<Integer> planets = new ArrayList<Integer>();		
+		planets.add( SweConst.SE_SUN );
+		planets.add( SweConst.SE_JUPITER );
+		
+		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED;
+		
+		Chart chart = new Chart(event, planets, coords, PLACIDUS_HOUSE_SYSTEM, iflag);
+		Map<String, List<Double>> data = chart.getPlanets();
+		
+		assertEquals(2, data.size());
+		
+		assertTrue("Sun",data.containsKey("Sun"));
+		assertTrue("Jupiter",data.containsKey("Jupiter"));
+			
+		assertTrue( data.get("Sun").get(1) > 0 );
+		assertTrue( data.get("Jupiter").get(1) < 0 ); // Retrograde
+		
+		assertEquals(0, data.get("Sun").get(0).intValue()); //Spring is comming 	
+		
+		System.out.println("cz.kibo.api.astrologyChartTest.planetsGeocentricWithIflagTest() -> Sun geocentric: " + data.get("Sun").get(0));
+				
+	}
+	
+	@Test
+	public void planetsTopocentricWithIflagTest() {
+		
+		final int PLACIDUS_HOUSE_SYSTEM = 'P';
+		
+		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 16, 20);
+		Coordinates coords = new Coordinates(LONGITUDE, LATITUDE, GEOALT);
+		
+		List<Integer> planets = new ArrayList<Integer>();		
+		planets.add( SweConst.SE_SUN );
+		planets.add( SweConst.SE_JUPITER );
+		
+		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED | SweConst.SEFLG_TOPOCTR;
+		
+		Chart chart = new Chart(event, planets, coords, PLACIDUS_HOUSE_SYSTEM, iflag);
+		Map<String, List<Double>> data = chart.getPlanets();
+		
+		assertEquals(2, data.size());
+		
+		assertTrue("Sun",data.containsKey("Sun"));
+		assertTrue("Jupiter",data.containsKey("Jupiter"));
+			
+		assertTrue( data.get("Sun").get(1) > 0 );
+		assertTrue( data.get("Jupiter").get(1) < 0 ); // Retrograde
+		
+		assertEquals(0, data.get("Sun").get(0).intValue()); //Spring is comming 	
+		
+		System.out.println("cz.kibo.api.astrologyChartTest.planetsTopoWithIflagTest() -> Sun topocentric: " + data.get("Sun").get(0));
+				
+	}
+	
+	@Test
+	public void cuspsPlacidusTropicalWithIflagTest() {
+		
+		final int PLACIDUS_HOUSE_SYSTEM = 'P';
+		
+		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 5, 6);
+		Coordinates coords = new Coordinates(LONGITUDE, LATITUDE, GEOALT);
+					
+				
+		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED;
+		
+		Chart chart = new Chart(event, new ArrayList<Integer>(), coords, PLACIDUS_HOUSE_SYSTEM, iflag);
+		List<Double> data = chart.getHouses();
+		
+		assertEquals(12, data.size());
+		
+		assertEquals(0, data.get(0).intValue()); 
+			
+		System.out.println("cz.kibo.api.astrologyChartTest.cuspsPlacidusTropicalWithIflagTest() -> As tropical: " + data.get(0));
+	}
+	
+	@Test
+	public void cuspsPlacidusSiderealWithIflagTest() {
+		
+		final int PLACIDUS_HOUSE_SYSTEM = 'P';
+		
+		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 5, 6);
+		Coordinates coords = new Coordinates(LONGITUDE, LATITUDE, GEOALT);
+					
+				
+		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED | SweConst.SEFLG_SIDEREAL;
+		
+		Chart chart = new Chart(event, new ArrayList<Integer>(), coords, PLACIDUS_HOUSE_SYSTEM, iflag);
+		List<Double> data = chart.getHouses();
+		
+		assertEquals(12, data.size());
+		
+		assertEquals(335, data.get(0).intValue()); 
+			
+		System.out.println("cz.kibo.api.astrologyChartTest.cuspsPlacidusSiderealWithIflagTest() -> As tropical: " + data.get(0));
+	}
+		
+	@Test
 	public void planetNameTest() {
 		
 		LocalDateTime event = LocalDateTime.now();

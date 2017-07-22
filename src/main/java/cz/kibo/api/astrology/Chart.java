@@ -48,9 +48,9 @@ public class Chart {
 		sw = new SwissEph( getPathToEphemeris() );
 		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0, SweDate.SE_GREG_CAL);
 		
-		int flags = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED;
+		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED;
 								
-		this.planetsPositions = calculatePlanets( planets, sw, sd, flags);										
+		this.planetsPositions = calculatePlanets( planets, sw, sd, iflag);										
 	}
 	
 	/**
@@ -71,55 +71,47 @@ public class Chart {
 		sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());
 		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0, SweDate.SE_GREG_CAL);
 		
-		// iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED  | SEFLG_EQUATORIAL;
-		int flags = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_TOPOCTR | SweConst.SEFLG_SPEED ;
+		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED | SweConst.SEFLG_TOPOCTR;
 								
-		this.planetsPositions = calculatePlanets( planets, sw, sd, flags);	
-		
-		
+		this.planetsPositions = calculatePlanets( planets, sw, sd, iflag);		
 	}
-		
+	
 	/**
-	 * Calculates planets and cusps positions. Planets in geocenntric cordinate system.
+	 * Calculates planets and cusps positions.
 	 * 
 	 * @param event The date and the time of the event in Universal Time (UT).
 	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.
 	 * @param houseSystem The house system as a character given as an integer. Constant from {@link swisseph.SweConst} 
-	 * @param coords longitude, latitude, geoalt for topocentric. Calculations relative to the observer on some place on the earth rather than relative to the center of the earth.
+	 * @param coords longitude, latitude, geoalt. 
+	 * @param iflag Options for calculation. {@link http://www.astro.com/swisseph/swephprg.htm#_Toc471829060} 
 	 * @see swisseph.SweConst
+	 * @see iflag http://www.astro.com/swisseph/swephprg.htm#_Toc471829060
 	 */
-	public Chart( LocalDateTime event, List<Integer> planets, Integer houseSystem, Coordinates coords) {
+	public Chart( LocalDateTime event, List<Integer> planets, Coordinates coords, Integer houseSystem, int iflag) {
 		super();
 		this.event = event;
-		this.planets = planets;		
-		this.houseSystem = houseSystem;								
-	}
-					
-	/**
-	 * Calculates planets and cusps positions. Planets in topocentric cordinate system.
-	 * 
-	 * @param event The date and the time of the event in Universal Time (UT).
-	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.
-	 * @param coords longitude, latitude, geoalt for topocentric. Calculations relative to the observer on some place on the earth rather than relative to the center of the earth.
-	 * @param houseSystem The house system as a character given as an integer. Constant from {@link swisseph.SweConst}.  
-	 * 
-	 * @see swisseph.SweConst
-	 */
-	public Chart( LocalDateTime event, List<Integer> planets, Coordinates coords, Integer houseSystem) {
-		super();
-		this.event = event;
-		this.planets = planets;				
-		this.houseSystem = houseSystem;								
-		this.coords = coords;		
-	}
+		this.planets = planets;
+		this.coords = coords;
+		this.houseSystem = houseSystem;
 		
+		sw = new SwissEph( getPathToEphemeris() );		
+		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0, SweDate.SE_GREG_CAL);				
+		
+		if( (iflag & 0xF000) ==  SweConst.SEFLG_TOPOCTR ) {
+			sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());
+		}
+				
+		this.planetsPositions = calculatePlanets( this.planets, this.sw, this.sd, iflag);
+		this.cuspsPositions = calculateCusps(this.sw, this.sd, this.houseSystem, this.coords, iflag);
+	}
+						
 	public List<Double> getHouses() {
 		// Could by null. If only planets calculations are invoke.
-		return cuspsPositions != null ? cuspsPositions : new ArrayList<Double>();
+		return this.cuspsPositions != null ? this.cuspsPositions : new ArrayList<Double>();
 	}
 	
 	public Map<String, List<Double>> getPlanets() {
-		return planetsPositions;
+		return this.planetsPositions;
 	}	
 	
 	public Coordinates getCoordinates() {		
@@ -145,7 +137,7 @@ public class Chart {
 		return settings.getProperty("ephemeris.path");		
 	}
 	
-	private Map<String, List<Double>> calculatePlanets( List<Integer> planets, SwissEph calculator, SweDate date, int flags) {
+	private Map<String, List<Double>> calculatePlanets( List<Integer> planets, SwissEph calculator, SweDate date, int flags ) {
 		Map<String, List<Double>> data = new HashMap<String, List<Double>>();
 						
 		for (Integer planet : planets) {
@@ -173,8 +165,35 @@ public class Chart {
 			
 			data.put( getPlanetName(planet), values);			
 		}
-						
+								
 		return data;
+	}
+	
+	
+	private List<Double> calculateCusps( SwissEph calculator, SweDate date, Integer hSystem, Coordinates coordinates, int flags ){
+		
+		List<Double> cPositions = new ArrayList<Double>();
+		
+		double[] cusps = new double[13];
+		double[] acsc = new double[10];
+		int result = sw.swe_houses(sd.getJulDay(),
+				flags,
+				coordinates.getLatitude(),
+				coordinates.getLongitude(),
+				hSystem,
+				cusps,
+				acsc);
+		
+		if(result == SweConst.ERR) {
+			System.err.println("Error! Cusps calculation was not possible.");
+			//TODO Exception
+		}
+		
+		for(int i = 1; i <= 12; i++){
+			cPositions.add(cusps[i]);					
+		}
+		
+		return cPositions;
 	}
 	
 	/*
