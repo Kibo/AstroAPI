@@ -11,22 +11,19 @@ Campanus, Koch, Morinus, Porphyry, Placidus, Equal. TODO
 Geocentric, Topocentric.
 
 **Zodiac type**
-Tropical, Sidereal(Fagan/Bradley)
+Tropical, Sidereal
 
 ### Version: 0.0.1-SNAPSHOT
-
 
 ## Documentation
 - [High precision ephemeris developed by Astrodienst](http://www.astro.com/swisseph/swephinfo_e.htm)
 - [Thomas Mack - a port of the SwissEphemeris package to Java](http://th-mack.de/international/download/)
-
 
 ### Install
 - [set path](https://github.com/Kibo/AstroAPI/blob/master/src/main/resources/settings.properties) to ephemeris
 - mvn build
 - mvn package
 - mvn javadoc:javadoc
-
 
 ### Example
 ``` 
@@ -40,7 +37,6 @@ Chart chart = new ChartBuilder( LocalDateTime event )
 chart.toJSON()	;	
 
 ```
-
 
 ```
 //Position of Sun, geocentric			
