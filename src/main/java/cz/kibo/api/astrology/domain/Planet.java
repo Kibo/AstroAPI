@@ -1,37 +1,36 @@
-package cz.kibo.api.astrology;
+package cz.kibo.api.astrology.domain;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import swisseph.SweConst;
 import swisseph.SweDate;
 import swisseph.SwissEph;
 
 /**
- * Represents an ephemeris data at a certain date and time. All time events - input and output - are in Universal Time (UT).
+ * Representation of planets ephemeris at a certain date and time.
  * 
- * This class should not be used alone. Use {@linkcz.kibo.api.astrology.ChartBuilder} to create the correct instance of this class.
+ * All time events - input and output - are in Universal Time (UT).
+ * This class should not be used alone. Use {@linkcz.kibo.api.astrology.builder.PlanetBuilder} to create the correct instance of this class.
+ * 
  * @author Tomas Jurman tomasjurman@gmail.com
+ *
  */
-public class Chart {
-	
-	private final Properties settings = new Properties();
-	
-	private List<Double> cuspsPositions;
-	private Map<String, List<Double>> planetsPositions;
+public class Planet extends Ephemeris{
 		
+	private Map<String, List<Double>> planetsPositions;
+	
 	private final LocalDateTime event;	
 	private List<Integer> planets;	
 	private Coordinates coords;
-	private Integer houseSystem;
-	
+	private int iflag;
+		
 	private SwissEph sw;
 	private SweDate sd;
+	
 	
 	/**
 	 * Calculates planets positions. Planets in geocentric cordinate system.
@@ -40,17 +39,18 @@ public class Chart {
 	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.
 	 * @see swisseph.SweConst
 	 */
-	public Chart( LocalDateTime event, List<Integer> planets) {
+	public Planet( LocalDateTime event, List<Integer> planets) {
 		super();
 		this.event = event;
 		this.planets = planets;
-						
-		sw = new SwissEph( getPathToEphemeris() );
+		
+		sw = new SwissEph( super.getPathToEphemeris() );
 		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0, SweDate.SE_GREG_CAL);
 		
 		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED;
 								
-		this.planetsPositions = calculatePlanets( planets, sw, sd, iflag);										
+		this.planetsPositions = calculatePlanets( planets, sw, sd, iflag);	
+		
 	}
 	
 	/**
@@ -61,10 +61,10 @@ public class Chart {
 	 * @param coords longitude, latitude, geoalt for topocentric. Calculations relative to the observer on some place on the earth rather than relative to the center of the earth.
 	 * @see swisseph.SweConst
 	 */
-	public Chart( LocalDateTime event, List<Integer> planets, Coordinates coords ) {
+	public Planet( LocalDateTime event, List<Integer> planets, Coordinates coords ) {
 		super();
 		this.event = event;
-		this.planets = planets;										
+		this.planets = planets;
 		this.coords = coords;
 		
 		sw = new SwissEph( getPathToEphemeris() );
@@ -73,41 +73,34 @@ public class Chart {
 		
 		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED | SweConst.SEFLG_TOPOCTR;
 								
-		this.planetsPositions = calculatePlanets( planets, sw, sd, iflag);		
+		this.planetsPositions = calculatePlanets( planets, sw, sd, iflag);			
 	}
 	
 	/**
-	 * Calculates planets and cusps positions.
+	 * Calculates planets and cusps positions with specific options.
 	 * 
 	 * @param event The date and the time of the event in Universal Time (UT).
-	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.
-	 * @param houseSystem The house system as a character given as an integer. Constant from {@link swisseph.SweConst} 
+	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}. 
 	 * @param coords longitude, latitude, geoalt. 
 	 * @param iflag Options for calculation. {@link http://www.astro.com/swisseph/swephprg.htm#_Toc471829060} 
 	 * @see swisseph.SweConst
 	 * @see iflag http://www.astro.com/swisseph/swephprg.htm#_Toc471829060
 	 */
-	public Chart( LocalDateTime event, List<Integer> planets, Coordinates coords, Integer houseSystem, int iflag) {
+	public Planet( LocalDateTime event, List<Integer> planets, Coordinates coords, int iflag) {
 		super();
 		this.event = event;
 		this.planets = planets;
 		this.coords = coords;
-		this.houseSystem = houseSystem;
+		this.iflag = iflag;
 		
 		sw = new SwissEph( getPathToEphemeris() );		
 		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0, SweDate.SE_GREG_CAL);				
 		
-		if( (iflag & 0xF000) ==  SweConst.SEFLG_TOPOCTR ) {
+		if( (this.iflag & 0xF000) ==  SweConst.SEFLG_TOPOCTR ) {
 			sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());
 		}
 				
-		this.planetsPositions = calculatePlanets( this.planets, this.sw, this.sd, iflag);
-		this.cuspsPositions = calculateCusps(this.sw, this.sd, this.houseSystem, this.coords, iflag);
-	}
-						
-	public List<Double> getHouses() {
-		// Could by null. If only planets calculations are invoke.
-		return this.cuspsPositions != null ? this.cuspsPositions : new ArrayList<Double>();
+		this.planetsPositions = calculatePlanets( this.planets, this.sw, this.sd, this.iflag);				
 	}
 	
 	public Map<String, List<Double>> getPlanets() {
@@ -121,22 +114,7 @@ public class Chart {
 	public LocalDateTime getEvent() {		
 		return this.event;
 	}	
-			
-	public String toJSON() {
-		return "TODO";
-	}
-		
-	private String getPathToEphemeris() {
-		
-		try {									
-			settings.load( this.getClass().getResourceAsStream("/settings.properties") );			
-		} catch (IOException e) {			
-			e.printStackTrace();
-		}
-		
-		return settings.getProperty("ephemeris.path");		
-	}
-	
+
 	private Map<String, List<Double>> calculatePlanets( List<Integer> planets, SwissEph calculator, SweDate date, int flags ) {
 		Map<String, List<Double>> data = new HashMap<String, List<Double>>();
 						
@@ -169,33 +147,6 @@ public class Chart {
 		return data;
 	}
 	
-	
-	private List<Double> calculateCusps( SwissEph calculator, SweDate date, Integer hSystem, Coordinates coordinates, int flags ){
-		
-		List<Double> cPositions = new ArrayList<Double>();
-		
-		double[] cusps = new double[13];
-		double[] acsc = new double[10];
-		int result = sw.swe_houses(sd.getJulDay(),
-				flags,
-				coordinates.getLatitude(),
-				coordinates.getLongitude(),
-				hSystem,
-				cusps,
-				acsc);
-		
-		if(result == SweConst.ERR) {
-			System.err.println("Error! Cusps calculation was not possible.");
-			//TODO Exception
-		}
-		
-		for(int i = 1; i <= 12; i++){
-			cPositions.add(cusps[i]);					
-		}
-		
-		return cPositions;
-	}
-	
 	/*
 	 * @param planet - int from swisseph.SweConst
 	 * 
@@ -215,4 +166,53 @@ public class Chart {
 		 				
 		return name;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((event == null) ? 0 : event.hashCode());
+		result = prime * result + ((planetsPositions == null) ? 0 : planetsPositions.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Planet other = (Planet) obj;
+		if (event == null) {
+			if (other.event != null)
+				return false;
+		} else if (!event.equals(other.event))
+			return false;
+		if (planetsPositions == null) {
+			if (other.planetsPositions != null)
+				return false;
+		} else if (!planetsPositions.equals(other.planetsPositions))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[ UTC: " + this.event);
+		
+		if(this.coords != null) {
+			sb.append(", " + this.coords + " ]\n");
+		}else {
+			sb.append(" ]\n");
+		}
+					
+		for (Map.Entry<String, List<Double>> planet : this.planetsPositions.entrySet()){
+			sb.append(planet.getKey() + ": " + planet.getValue() +"\n");
+		}					
+		
+		return sb.toString();
+	}	
 }

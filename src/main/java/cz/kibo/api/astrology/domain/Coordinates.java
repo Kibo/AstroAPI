@@ -1,4 +1,4 @@
-package cz.kibo.api.astrology;
+package cz.kibo.api.astrology.domain;
 
 public class Coordinates {
 	
@@ -65,6 +65,6 @@ public class Coordinates {
 
 	@Override
 	public String toString() {
-		return "Coordinates [latitude=" + latitude + ", longitude=" + longitude + ", geoaltitude=" + geoalt + "]";
+		return "lat=" + latitude + ", lon=" + longitude + ", geoalt=" + geoalt;
 	}     
 }

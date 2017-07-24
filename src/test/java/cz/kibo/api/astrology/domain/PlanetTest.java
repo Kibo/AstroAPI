@@ -1,4 +1,4 @@
-package cz.kibo.api.astrology;
+package cz.kibo.api.astrology.domain;
 
 import static org.junit.Assert.*;
 
@@ -11,14 +11,12 @@ import org.junit.Test;
 
 import swisseph.SweConst;
 
-public class ChartTest {
-	
+public class PlanetTest {
+
 	final double LONGITUDE = 16.0542676;
 	final double LATITUDE = 48.8559107;
 	final double GEOALT = 286;
 	
-	private static final double DELTA = 1e-15;
-
 	@Test
 	public void planetsGeocentricTest() {
 		
@@ -28,7 +26,7 @@ public class ChartTest {
 		planets.add( SweConst.SE_SUN );
 		planets.add( SweConst.SE_JUPITER );
 					
-		Chart chart = new Chart(event, planets);
+		Planet chart = new Planet(event, planets);
 		Map<String, List<Double>> data = chart.getPlanets();
 		
 		assertEquals(2, data.size());
@@ -54,7 +52,7 @@ public class ChartTest {
 		planets.add( SweConst.SE_SUN );
 		planets.add( SweConst.SE_JUPITER );
 		
-		Chart chart = new Chart(event, planets, coords);
+		Planet chart = new Planet(event, planets, coords);
 		Map<String, List<Double>> data = chart.getPlanets();
 		
 		assertEquals(2, data.size());
@@ -84,7 +82,7 @@ public class ChartTest {
 		
 		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED;
 		
-		Chart chart = new Chart(event, planets, coords, PLACIDUS_HOUSE_SYSTEM, iflag);
+		Planet chart = new Planet(event, planets, coords, iflag);
 		Map<String, List<Double>> data = chart.getPlanets();
 		
 		assertEquals(2, data.size());
@@ -115,7 +113,7 @@ public class ChartTest {
 		
 		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED | SweConst.SEFLG_TOPOCTR;
 		
-		Chart chart = new Chart(event, planets, coords, PLACIDUS_HOUSE_SYSTEM, iflag);
+		Planet chart = new Planet(event, planets, coords, iflag);
 		Map<String, List<Double>> data = chart.getPlanets();
 		
 		assertEquals(2, data.size());
@@ -132,48 +130,6 @@ public class ChartTest {
 				
 	}
 	
-	@Test
-	public void cuspsPlacidusTropicalWithIflagTest() {
-		
-		final int PLACIDUS_HOUSE_SYSTEM = 'P';
-		
-		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 5, 6);
-		Coordinates coords = new Coordinates(LONGITUDE, LATITUDE, GEOALT);
-					
-				
-		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED;
-		
-		Chart chart = new Chart(event, new ArrayList<Integer>(), coords, PLACIDUS_HOUSE_SYSTEM, iflag);
-		List<Double> data = chart.getHouses();
-		
-		assertEquals(12, data.size());
-		
-		assertEquals(0, data.get(0).intValue()); 
-			
-		System.out.println("cz.kibo.api.astrologyChartTest.cuspsPlacidusTropicalWithIflagTest() -> As tropical: " + data.get(0));
-	}
-	
-	@Test
-	public void cuspsPlacidusSiderealWithIflagTest() {
-		
-		final int PLACIDUS_HOUSE_SYSTEM = 'P';
-		
-		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 5, 6);
-		Coordinates coords = new Coordinates(LONGITUDE, LATITUDE, GEOALT);
-					
-				
-		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED | SweConst.SEFLG_SIDEREAL;
-		
-		Chart chart = new Chart(event, new ArrayList<Integer>(), coords, PLACIDUS_HOUSE_SYSTEM, iflag);
-		List<Double> data = chart.getHouses();
-		
-		assertEquals(12, data.size());
-		
-		assertEquals(335, data.get(0).intValue()); 
-			
-		System.out.println("cz.kibo.api.astrologyChartTest.cuspsPlacidusSiderealWithIflagTest() -> As tropical: " + data.get(0));
-	}
-		
 	@Test
 	public void planetNameTest() {
 		
@@ -194,7 +150,7 @@ public class ChartTest {
 		planets.add( SweConst.SE_MEAN_APOG); // Lilith
 		planets.add(SweConst.SE_MEAN_NODE ); // Nort Node
 		
-		Chart chart = new Chart(event, planets);
+		Planet chart = new Planet(event, planets);
 		Map<String, List<Double>> data = chart.getPlanets();
 					
 		assertTrue("Moon", data.containsKey("Moon"));
@@ -212,5 +168,3 @@ public class ChartTest {
 		assertTrue("NNode",data.containsKey("NNode"));			
 	}
 }
-
-
