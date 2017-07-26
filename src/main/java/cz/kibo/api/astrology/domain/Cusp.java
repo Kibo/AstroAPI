@@ -47,7 +47,7 @@ public class Cusp extends Ephemeris{
 		this.iflag = iflag;	
 		
 		sw = new SwissEph( super.getPathToEphemeris() );		
-		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0, SweDate.SE_GREG_CAL);
+		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/3600.0, SweDate.SE_GREG_CAL);
 		
 		if( (this.iflag & 0xF0000) ==  SweConst.SEFLG_SIDEREAL ) {
 			sw.swe_set_sid_mode( this.iflag & 0x00FF );
@@ -128,9 +128,13 @@ public class Cusp extends Ephemeris{
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[ UTC: " + this.event);	
-		//sb.append(this.sw.swe_house_name( this.houseSystem ) + "\n");	
-		sb.append(", " + this.coords + " ]\n");										
+		sb.append( (this.iflag & 0xF0000) ==  SweConst.SEFLG_SIDEREAL ? "Sidereal - " : "Tropical \n");		
+		if( (this.iflag & 0xF0000) ==  SweConst.SEFLG_SIDEREAL ) {
+			sb.append( sw.swe_get_ayanamsa_name(this.iflag & 0x00FF) + "\n");
+		}			
+		sb.append("[ UTC: " + this.event + ", ");			
+		sb.append(", " + this.coords + ", ");
+		sb.append(this.sw.swe_house_name( (char)(this.houseSystem.intValue())) + " ]\n");	
 		sb.append(this.cuspsPositions + " ]\n");		
 		return sb.toString();
 	}	

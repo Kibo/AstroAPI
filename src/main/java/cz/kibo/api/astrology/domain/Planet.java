@@ -45,7 +45,7 @@ public class Planet extends Ephemeris{
 		this.planets = planets;
 		
 		sw = new SwissEph( super.getPathToEphemeris() );
-		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0, SweDate.SE_GREG_CAL);
+		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/360.0, SweDate.SE_GREG_CAL);
 		
 		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED;
 								
@@ -69,7 +69,7 @@ public class Planet extends Ephemeris{
 		
 		sw = new SwissEph( getPathToEphemeris() );
 		sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());
-		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0, SweDate.SE_GREG_CAL);
+		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/360.0, SweDate.SE_GREG_CAL);
 		
 		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED | SweConst.SEFLG_TOPOCTR;
 								
@@ -94,7 +94,7 @@ public class Planet extends Ephemeris{
 		this.iflag = iflag;
 		
 		sw = new SwissEph( getPathToEphemeris() );		
-		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0, SweDate.SE_GREG_CAL);				
+		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/360.0, SweDate.SE_GREG_CAL);				
 		
 		if( (this.iflag & 0xF000) ==  SweConst.SEFLG_TOPOCTR ) {
 			sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());

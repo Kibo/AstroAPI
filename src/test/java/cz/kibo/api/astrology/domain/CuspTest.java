@@ -23,7 +23,7 @@ public class CuspTest {
 		
 		final int PLACIDUS_HOUSE_SYSTEM = 'P';
 		
-		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 5, 6);
+		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 5, 6);		
 		Coordinates coords = new Coordinates(LONGITUDE, LATITUDE, GEOALT);
 									
 		int iflag = 0; // tropical - default
@@ -34,8 +34,7 @@ public class CuspTest {
 		assertEquals(12, data.size());
 		
 		assertEquals(0, data.get(0).intValue()); 
-		
-		System.out.println( "Tropical" );
+				
 		System.out.println( chart.toString() );
 	}
 	
@@ -44,10 +43,9 @@ public class CuspTest {
 		
 		final int PLACIDUS_HOUSE_SYSTEM = 'P';
 		
-		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 5, 6);
+		LocalDateTime event = LocalDateTime.of( 2018, 3, 20, 5, 6);		
 		Coordinates coords = new Coordinates(LONGITUDE, LATITUDE, GEOALT);
-					
-				
+									
 		int iflag = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_BABYL_HUBER;
 		
 		Cusp chart = new Cusp(event, coords, PLACIDUS_HOUSE_SYSTEM, iflag);
@@ -56,9 +54,7 @@ public class CuspTest {
 		assertEquals(12, data.size());
 		
 		assertEquals(335, data.get(0).intValue()); 
-						
-		System.out.println( "Sidereal" );
+								
 		System.out.println( chart.toString() );
 	}
-
 }
