@@ -35,7 +35,7 @@ public class Cusp extends Ephemeris{
 	 * 
 	 * @param event The date and the time of the event in Universal Time (UT).	
 	 * @param coords longitude, latitude, geoalt. 
-	 * @param iflag Options for calculation. It's different from the planet flag! [0 | SweConst.SEFLG_SIDEREAL && SE_SIDM_*]
+	 * @param iflag Options for sidereal or tropical calculation. 0 - tropical, SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_* - for sidereal. Dont use other flags!.
 	 * 
 	 * @see iflag @http://th-mack.de/download/swisseph-doc/swisseph/SwissEph.html#swe_set_sid_mode(int)
 	 */
@@ -53,7 +53,7 @@ public class Cusp extends Ephemeris{
 			sw.swe_set_sid_mode( this.iflag & 0x00FF );
 		}
 					
-		this.cuspsPositions = calculateCusps(this.sw, this.sd, this.houseSystem, this.coords, iflag);
+		this.cuspsPositions = calculateCusps(this.sw, this.sd, this.houseSystem, this.coords, this.iflag);
 	}
 	
 	public List<Double> getCusps() {		

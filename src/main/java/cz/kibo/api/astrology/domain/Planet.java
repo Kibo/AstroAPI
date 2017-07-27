@@ -11,7 +11,7 @@ import swisseph.SweDate;
 import swisseph.SwissEph;
 
 /**
- * Representation of planets ephemeris at a certain date and time.
+ * Representation of planet ephemeris at a certain date and time.
  * 
  * All time events - input and output - are in Universal Time (UT).
  * This class should not be used alone. Use {@linkcz.kibo.api.astrology.builder.PlanetBuilder} to create the correct instance of this class.
@@ -37,20 +37,24 @@ public class Planet extends Ephemeris{
 	 * 
 	 * @param event The date and the time of the event in Universal Time (UT).
 	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.
+	 * @param iflag Options for sidereal or tropical calculation. 0 - tropical, SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_* - for sidereal .Dont use other flags!. 
 	 * @see swisseph.SweConst
 	 */
-	public Planet( LocalDateTime event, List<Integer> planets) {
+	public Planet( LocalDateTime event, List<Integer> planets, int iflag) {
 		super();
 		this.event = event;
 		this.planets = planets;
+		this.iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED;
 		
 		sw = new SwissEph( super.getPathToEphemeris() );
 		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/360.0, SweDate.SE_GREG_CAL);
 		
-		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED;
-								
-		this.planetsPositions = calculatePlanets( planets, sw, sd, iflag);	
+		if( (iflag & 0xF0000) ==  SweConst.SEFLG_SIDEREAL ) {
+			sw.swe_set_sid_mode( iflag & 0x00FF );		
+			this.iflag |= SweConst.SEFLG_SIDEREAL;	
+		}
 		
+		this.planetsPositions = calculatePlanets( planets, sw, sd, this.iflag);			
 	}
 	
 	/**
@@ -59,48 +63,27 @@ public class Planet extends Ephemeris{
 	 * @param event The date and the time of the event in Universal Time (UT).
 	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.	
 	 * @param coords longitude, latitude, geoalt for topocentric. Calculations relative to the observer on some place on the earth rather than relative to the center of the earth.
+	 * @param iflag Options for sidereal or tropical calculation. 0 - tropical, SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_* - for sidereal. Dont use other flags!.
+	 *
 	 * @see swisseph.SweConst
 	 */
-	public Planet( LocalDateTime event, List<Integer> planets, Coordinates coords ) {
+	public Planet( LocalDateTime event, List<Integer> planets, Coordinates coords, int iflag ) {
 		super();
 		this.event = event;
 		this.planets = planets;
 		this.coords = coords;
+		this.iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED | SweConst.SEFLG_TOPOCTR;
 		
 		sw = new SwissEph( getPathToEphemeris() );
 		sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());
 		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/360.0, SweDate.SE_GREG_CAL);
 		
-		int iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_SPEED | SweConst.SEFLG_TOPOCTR;
-								
-		this.planetsPositions = calculatePlanets( planets, sw, sd, iflag);			
-	}
-	
-	/**
-	 * Calculates planets and cusps positions with specific options.
-	 * 
-	 * @param event The date and the time of the event in Universal Time (UT).
-	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}. 
-	 * @param coords longitude, latitude, geoalt. 
-	 * @param iflag Options for calculation. {@link http://www.astro.com/swisseph/swephprg.htm#_Toc471829060} 
-	 * @see swisseph.SweConst
-	 * @see iflag http://www.astro.com/swisseph/swephprg.htm#_Toc471829060
-	 */
-	public Planet( LocalDateTime event, List<Integer> planets, Coordinates coords, int iflag) {
-		super();
-		this.event = event;
-		this.planets = planets;
-		this.coords = coords;
-		this.iflag = iflag;
-		
-		sw = new SwissEph( getPathToEphemeris() );		
-		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/360.0, SweDate.SE_GREG_CAL);				
-		
-		if( (this.iflag & 0xF000) ==  SweConst.SEFLG_TOPOCTR ) {
-			sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());
+		if( (iflag & 0xF0000) ==  SweConst.SEFLG_SIDEREAL ) {
+			sw.swe_set_sid_mode( iflag & 0x00FF );
+			this.iflag |= SweConst.SEFLG_SIDEREAL;
 		}
-				
-		this.planetsPositions = calculatePlanets( this.planets, this.sw, this.sd, this.iflag);				
+		
+		this.planetsPositions = calculatePlanets( planets, sw, sd, this.iflag);			
 	}
 	
 	public Map<String, List<Double>> getPlanets() {
@@ -132,7 +115,7 @@ public class Planet extends Ephemeris{
 				if (serr.length() > 0) {
 					System.err.println("Warning: " + serr);
 				} else {
-					System.err.println( String.format("Warning, different flags used (0x%x)", ret));
+					System.err.println( String.format("Warning, different flags used (0x%x)", ret));					
 				}
 			}
 								

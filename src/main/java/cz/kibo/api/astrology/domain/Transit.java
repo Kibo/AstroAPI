@@ -8,6 +8,7 @@ import swisseph.SweConst;
 import swisseph.SweDate;
 import swisseph.SwissEph;
 import swisseph.TCPlanet;
+import swisseph.TCPlanetPlanet;
 import swisseph.TransitCalculator;
 
 /**
@@ -22,8 +23,10 @@ import swisseph.TransitCalculator;
 public class Transit extends Ephemeris{
 	
 	private final LocalDateTime event;	
-	private Integer planet;	
+	private Integer planet;
+	private Integer planet2;		
 	private Double point;
+	private Double offset;	
 	private Coordinates coords;
 	private int iflag;
 	private Double transit;
@@ -32,12 +35,12 @@ public class Transit extends Ephemeris{
 	private SweDate sd;
 	
 	/**
-	 * Calculates planets transit to point. Planets in geocentric cordinate system.
+	 * Calculates planets transit to point in zodiac. Planets in geocentric cordinate system.
 	 * 
-	 * @param event The date and the time of the event in Universal Time (UT).
+	 * @param event Start date in Universal Time (UT).
 	 * @param planet The transiting planet. Constants of planets are in {@link swisseph.SweConst}.
-	 * @param point  The desired transit degree.
-	 * @param iflag The calculation type flags.  Dont use: SweConst.SEFLG_SWIEPH | SweConst.SEFLG_TRANSIT_LONGITUDE. {@link http://th-mack.de/download/swisseph-doc/index.html}
+	 * @param point The desired transit degree.
+	 * @param iflag Options for sidereal or tropical calculation. 0 - tropical, SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_* - for sidereal .Dont use other flags!.
 	 * 
 	 * @see swisseph.SweConst
 	 */
@@ -52,11 +55,10 @@ public class Transit extends Ephemeris{
 		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/360.0, SweDate.SE_GREG_CAL);
 										
 		if( (iflag & 0xF0000) ==  SweConst.SEFLG_SIDEREAL ) {
-			sw.swe_set_sid_mode( iflag & 0x00FF );			
+			sw.swe_set_sid_mode( iflag & 0x00FF );
+			this.iflag |= SweConst.SEFLG_SIDEREAL;
 		}
-				
-		this.iflag |= iflag;
-		
+							
 		boolean backwards = false;
 		
 		TransitCalculator tc = new TCPlanet(
@@ -69,12 +71,12 @@ public class Transit extends Ephemeris{
 	}
 	
 	/**
-	 * Calculates planets transit to point. Suitable for topocentric cordinate system.
+	 * Calculates planets transit to point in zodiac. Planets in topocentric cordinate system.
 	 * 
-	 * @param event The date and the time of the event in Universal Time (UT).
+	 * @param event Start date in Universal Time (UT).
 	 * @param planet The transiting planet. Constants of planets are in {@link swisseph.SweConst}.
-	 * @param point  The desired transit degree.
-	 * @param iflag The calculation type flags.  Dont use: SweConst.SEFLG_SWIEPH | SweConst.SEFLG_TRANSIT_LONGITUDE. {@link http://th-mack.de/download/swisseph-doc/index.html}
+	 * @param point The desired transit degree.
+	 * @param iflag Options for sidereal or tropical calculation. 0 - tropical, SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_* - for sidereal .Dont use other flags!.
 	 * 
 	 * @see swisseph.SweConst
 	 */
@@ -84,21 +86,17 @@ public class Transit extends Ephemeris{
 		this.planet = planet;
 		this.point = point;
 		this.coords = coords;
-		this.iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_TRANSIT_LONGITUDE ;
+		this.iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_TRANSIT_LONGITUDE | SweConst.SEFLG_TOPOCTR;
 			
 		sw = new SwissEph( super.getPathToEphemeris() );
+		sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());
 		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/360.0, SweDate.SE_GREG_CAL);
 				
 		if( (iflag & 0xF0000) ==  SweConst.SEFLG_SIDEREAL ) {
-			sw.swe_set_sid_mode( iflag & 0x00FF );			
+			sw.swe_set_sid_mode( iflag & 0x00FF );	
+			this.iflag |= SweConst.SEFLG_SIDEREAL;
 		}
-		
-		if( (iflag & 0xF000) ==  SweConst.SEFLG_TOPOCTR ) {
-			sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());			
-		}
-		
-		this.iflag |= iflag;
-		
+								
 		boolean backwards = false;
 			
 		TransitCalculator tc = new TCPlanet(
@@ -110,8 +108,134 @@ public class Transit extends Ephemeris{
 		this.transit = sw.getTransitUT(tc, sd.getJulDay(), backwards);		
 	}
 	
+	
+	/**
+	 * Calculates transit of two different planets to each other. Planets in geocentric cordinate system.
+	 * 
+	 * @param event Start date in Universal Time (UT).
+	 * @param planet The transiting planet. Constants of planets are in {@link swisseph.SweConst}.
+	 * @param planet2 The second planet that will be transited by the first planet.
+	 * @param offset The desired transit degree.
+	 * @param iflag Options for sidereal or tropical calculation. 0 - tropical, SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_* - for sidereal .Dont use other flags!.
+	 * 
+	 * @see swisseph.SweConst
+	 */
+	public Transit( LocalDateTime event, Integer planet, Integer planet2, double offset, int iflag) {
+		super();
+		this.event = event;
+		this.planet = planet;
+		this.planet2 = planet2;
+		this.offset = offset;
+		this.iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_TRANSIT_LONGITUDE;
+		
+		sw = new SwissEph( super.getPathToEphemeris() );
+		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/360.0, SweDate.SE_GREG_CAL);
+										
+		if( (iflag & 0xF0000) ==  SweConst.SEFLG_SIDEREAL ) {
+			sw.swe_set_sid_mode( iflag & 0x00FF );				
+			this.iflag |= SweConst.SEFLG_SIDEREAL;
+		}
+						
+		boolean backwards = false;
+		
+		TransitCalculator tc = new TCPlanetPlanet(
+                sw,
+                this.planet,
+                this.planet2,
+                this.iflag,
+                this.offset);
+		 
+		this.transit = sw.getTransitUT(tc, sd.getJulDay(), backwards);		
+	}
+	
+	/**
+	 * Calculates transit of two different planets to each other. Planets in topocentric cordinate system.
+	 * 
+	 * @param event Start date in Universal Time (UT).
+	 * @param planet The transiting planet. Constants of planets are in {@link swisseph.SweConst}.
+	 * @param planet2 The second planet that will be transited by the first planet.
+	 * @param offset The desired transit degree.
+	 * @param iflag Options for sidereal or tropical calculation. 0 - tropical, SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_* - for sidereal .Dont use other flags!.
+	 * 
+	 * @see swisseph.SweConst
+	 */
+	public Transit( LocalDateTime event, Integer planet, Integer planet2, double offset, Coordinates coords, int iflag) {
+		super();
+		this.event = event;
+		this.planet = planet;
+		this.planet2 = planet2;
+		this.coords = coords;
+		this.offset = offset;
+		this.iflag = SweConst.SEFLG_SWIEPH | SweConst.SEFLG_TRANSIT_LONGITUDE | SweConst.SEFLG_TOPOCTR;
+		
+		sw = new SwissEph( super.getPathToEphemeris());
+		sw.swe_set_topo(this.coords.getLongitude(), this.coords.getLatitude(), this.coords.getGeoalt());
+		sd = new SweDate(event.getYear(), event.getMonthValue(), event.getDayOfMonth(), event.getHour() + event.getMinute()/60.0 + event.getSecond()/360.0, SweDate.SE_GREG_CAL);
+										
+		if( (iflag & 0xF0000) ==  SweConst.SEFLG_SIDEREAL ) {
+			sw.swe_set_sid_mode( iflag & 0x00FF );	
+			this.iflag |= SweConst.SEFLG_SIDEREAL;
+		}
+						
+		boolean backwards = false;
+		
+		TransitCalculator tc = new TCPlanetPlanet(
+                sw,
+                this.planet,
+                this.planet2,
+                this.iflag,
+                this.offset);
+		 
+		this.transit = sw.getTransitUT(tc, sd.getJulDay(), backwards);		
+	}
+	
 	public LocalDateTime getTransit() {
 		SweDate sweDate = new SweDate(this.transit, SweDate.SE_GREG_CAL);		 		 		
 		return LocalDateTime.ofInstant(sweDate.getDate(0).toInstant(), ZoneOffset.UTC);
-	}	
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((event == null) ? 0 : event.hashCode());
+		result = prime * result + iflag;
+		result = prime * result + ((planet == null) ? 0 : planet.hashCode());
+		result = prime * result + ((transit == null) ? 0 : transit.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transit other = (Transit) obj;
+		if (event == null) {
+			if (other.event != null)
+				return false;
+		} else if (!event.equals(other.event))
+			return false;
+		if (iflag != other.iflag)
+			return false;
+		if (planet == null) {
+			if (other.planet != null)
+				return false;
+		} else if (!planet.equals(other.planet))
+			return false;
+		if (transit == null) {
+			if (other.transit != null)
+				return false;
+		} else if (!transit.equals(other.transit))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "UTC: " + getTransit();
+	}
 }

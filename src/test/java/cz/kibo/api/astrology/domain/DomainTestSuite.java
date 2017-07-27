@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
   PlanetTest.class,
   CuspTest.class,
+  TransitTest.class,
 })
 
 public class DomainTestSuite {}
