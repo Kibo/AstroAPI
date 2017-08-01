@@ -5,12 +5,15 @@ The AstroAPI is a simple API allowing consumers to get planets and cusps positio
 Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Chiron, Lilith, NNode.
 
 **House systems**:
+
 Placidus, Koch, Porphyrius, Regiomontanus, Campanus, Equal, Vehlow Equal, Whole, Axial Rotation, Horizontal, Polich/Page, Alcabitius, Gauquelin sectors, Morinus.
 
 **Coordinate systems**
+
 Geocentric, Topocentric.
 
 **Zodiac type**
+
 Tropical, Sidereal
 
 ### Version: 0.8
@@ -59,33 +62,30 @@ planetEphemeris.toJSON();
 Cusp cuspEphemeris = new CuspBuilder(event)
   					.houses("Palcidus")
   					.topo(48.8555, 18.0488, 0)
-    				.zodiac("Fagan Bradley")	
+    					.zodiac("Fagan Bradley")	
  					.build();
 cuspEphemeris.toJSON();
 ```
 	
 ```
-//Next transit Sun to point 36° in zodiac, geocentric			
-Transit transit = new TransitBuilder( LocalDateTime event )
-			.planet("Sun")
-			.toPoint(36)
-			.aspects("0,60,90,120,180")			
-			.buildTransit();
-			
-transit.toJSON();			
+// Tropical, the Moon in conjunction with the Sun.
+ Transit time = new TransitBuilder(event)
+  					.planet("Moon") 					
+  					.toPlanet("Sun") 
+  					.build();
+ 	
+ System.out.println(time);	
 ```	
 
 ```
-//Next transit Sun to Mars, count 4, geocentric			
-Transit transit = new TransitBuilder( LocalDateTime event )
-			.planet("Sun")
-			.toPlanet("Mars")
-			.aspects("90")		
-			.count(4)
-			.buildTransit();	
-			
-transit.toJSON();
-	
+// Sidereal, the Moon in conjunction with the point 36.3° in zodiac.
+ Planet time = new PlanetBuilder(event)
+  					.planet('Moon')
+  					.toPoint(36.3)
+   				.zodiac("Fagan Bradley")	
+ 					.build();
+ 
+System.out.println(time);	
 ```					
 
 ## License

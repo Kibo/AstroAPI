@@ -84,36 +84,7 @@ public class PlanetBuilder extends Builder{
 		
 		String[] interest = planets.split(",");
 		for(int i = 0, ln = interest.length; i < ln; i++ ) {		
-			switch (interest[i].trim()) {
-				case "Sun":		this.planetsList.add(SweConst.SE_SUN);
-						 		break;
-				case "Moon":	this.planetsList.add(SweConst.SE_MOON);
-			 					break;
-				case "Mercury":	this.planetsList.add(SweConst.SE_MERCURY);
-								break;	
-				case "Venus":	this.planetsList.add(SweConst.SE_VENUS);
-								break;	
-				case "Mars":	this.planetsList.add(SweConst.SE_MARS);
-								break;	
-				case "Jupiter":	this.planetsList.add(SweConst.SE_JUPITER);
-								break;	
-				case "Saturn":	this.planetsList.add(SweConst.SE_SATURN);
-								break;	
-				case "Neptune":	this.planetsList.add(SweConst.SE_NEPTUNE);
-								break;
-				case "Uranus":	this.planetsList.add(SweConst.SE_URANUS);
-								break;				
-				case "Pluto":	this.planetsList.add(SweConst.SE_PLUTO);
-								break;	
-				case "Chiron":	this.planetsList.add(SweConst.SE_CHIRON);
-								break;	
-				case "Lilith":	this.planetsList.add(SweConst.SE_MEAN_APOG);
-								break;	
-				case "NNode":	this.planetsList.add(SweConst.SE_MEAN_NODE);
-								break;								 
-				default: 
-					throw new IllegalArgumentException( "Unknown planet name: " + interest[i]);            	
-			}			
+			planetsList.add( super.getPlanet( interest[i] ));
 		}
 						
 		return this;
@@ -128,7 +99,7 @@ public class PlanetBuilder extends Builder{
      * @return	
 	 */
 	public PlanetBuilder topo(double lon, double lat, double geoalt) {
-		this.coords = super.setTopo(lon, lat, geoalt);
+		this.coords = super.getCoordinates(lon, lat, geoalt);
 		return this;
 	}
 		
@@ -139,7 +110,7 @@ public class PlanetBuilder extends Builder{
 	 * @return
 	 */
 	public PlanetBuilder zodiac(String siderealMode) {
-		this.iflags = super.setZodiac(siderealMode);				
+		this.iflags = super.getSiderealFlags(siderealMode);				
 		return this;
 	}
 			

@@ -6,23 +6,70 @@ import swisseph.SweConst;
 public abstract class Builder {
 		
 	/**
-	 * Sets topocentric cordinate system.
+	 * Get cordinate.
 	 * 
 	 * @param lon The Longitude in degrees
      * @param lat The Latitude in degrees 
-     * @param geoalt The height above sea level in meters	
+     * @param geoalt The height above sea level in meters
+     * @return	
 	 */
-	protected Coordinates setTopo(double lon, double lat, double geoalt) {
+	protected Coordinates getCoordinates(double lon, double lat, double geoalt) {
 		return new Coordinates(lon, lat, geoalt);		
 	}
 	
 	/**
-	 * Sets sidereal mode
+	 * Get planet
+	 * 
+	 * @param planetName
+	 * @return
+	 * 
+	 * @see swisseph.SweConst
+	 */
+	protected int getPlanet( String planetName) {
+		
+		int planet = 0;
+		
+		switch (planetName.trim()) {
+			case "Sun":		planet = SweConst.SE_SUN;
+					 		break;
+			case "Moon":	planet = SweConst.SE_MOON;
+		 					break;
+			case "Mercury":	planet = SweConst.SE_MERCURY;
+							break;	
+			case "Venus":	planet = SweConst.SE_VENUS;
+							break;	
+			case "Mars":	planet = SweConst.SE_MARS;
+							break;	
+			case "Jupiter":	planet = SweConst.SE_JUPITER;
+							break;	
+			case "Saturn":	planet = SweConst.SE_SATURN;
+							break;	
+			case "Neptune":	planet = SweConst.SE_NEPTUNE;
+							break;
+			case "Uranus":	planet = SweConst.SE_URANUS;
+							break;				
+			case "Pluto":	planet = SweConst.SE_PLUTO;
+							break;	
+			case "Chiron":	planet = SweConst.SE_CHIRON;
+							break;	
+			case "Lilith":	planet = SweConst.SE_MEAN_APOG;
+							break;	
+			case "NNode":	planet = SweConst.SE_MEAN_NODE;
+							break;								 
+			default: 
+				throw new IllegalArgumentException( "Unknown planet name: " + planetName);      			
+		}
+		
+		return planet;
+	}
+	
+	/**
+	 * Get iflags for sidereal mode
 	 * 
 	 * @param siderealMode sidereal mode
 	 * @return
 	 */
-	public int setZodiac(String siderealMode) {
+	protected int getSiderealFlags(String siderealMode) {
 		
 		int iflags = 0;
 		

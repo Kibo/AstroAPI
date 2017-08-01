@@ -118,7 +118,7 @@ public class CuspBuilder extends Builder{
      * @return	
 	 */
 	public CuspBuilder topo(double lon, double lat, double geoalt) {
-		this.coords = super.setTopo(lon, lat, geoalt);
+		this.coords = super.getCoordinates(lon, lat, geoalt);
 		return this;
 	}
 		
@@ -129,7 +129,7 @@ public class CuspBuilder extends Builder{
 	 * @return
 	 */
 	public CuspBuilder zodiac(String siderealMode) {
-		this.iflags = super.setZodiac(siderealMode);				
+		this.iflags = super.getSiderealFlags(siderealMode);				
 		return this;
 	}	
 	
