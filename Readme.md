@@ -13,7 +13,7 @@ Geocentric, Topocentric.
 **Zodiac type**
 Tropical, Sidereal
 
-### Version: 0.0.1-SNAPSHOT
+### Version: 0.8
 
 ## Documentation
 - [High precision ephemeris developed by Astrodienst](http://www.astro.com/swisseph/swephinfo_e.htm)
@@ -27,24 +27,22 @@ Tropical, Sidereal
 
 ### Example
 ``` 
-//All planets, houses, topocentric
-Chart chart = new ChartBuilder( LocalDateTime event )
-			.planets()
-			.houses("Placidus")
-			.topo(48.8555, 18.0488)
-			.buildChart();
-			
-chart.toJSON()	;	
+// Topocentric, tropical, all planets.
+Planet planetEphemeris = new PlanetBuilder(event)
+  					.planets() 					
+  					.topo(48.8555, 18.0488, 0)
+  					.build();
+planetEphemeris.toJSON();
 
 ```
 
 ```
-//Position of Sun, geocentric			
-Chart chart = new ChartBuilder( LocalDateTime event )
-			.planet("Sun")
-			.buildChart();
-			
-chart.toJSON()	;			
+// Geocentric, sidereal, Sun and Moon only.
+Planet planetEphemeris = new PlanetBuilder(event)
+ 					.planet('Sun, Moon')
+					.zodiac("Fagan Bradley")	
+					.build();
+planetEphemeris.toJSON();				
 ```	
 
 ```
