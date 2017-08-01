@@ -5,7 +5,7 @@ The AstroAPI is a simple API allowing consumers to get planets and cusps positio
 Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Chiron, Lilith, NNode.
 
 **House systems**:
-Campanus, Koch, Morinus, Porphyry, Placidus, Equal. TODO
+Placidus, Koch, Porphyrius, Regiomontanus, Campanus, Equal, Vehlow Equal, Whole, Axial Rotation, Horizontal, Polich/Page, Alcabitius, Gauquelin sectors, Morinus.
 
 **Coordinate systems**
 Geocentric, Topocentric.
@@ -46,14 +46,24 @@ planetEphemeris.toJSON();
 ```	
 
 ```
-//Houses, topocentric			
-Chart chart = new ChartBuilder( LocalDateTime event )
-			.houses("Campanus")
-			.topo(48.8555, 18.0488)
-			.buildChart();
-			
-chart.toJSON()	;
-```		
+ // Tropical, Campanus.
+ Cusp cuspEphemeris = new CuspBuilder(event)
+  					.houses("Campanus") 					
+  					.topo(48.8555, 18.0488, 0)
+  					.build();
+ cuspEphemeris.toJSON();
+```	
+
+```
+// Sidereal, Placidus
+Cusp cuspEphemeris = new CuspBuilder(event)
+  					.houses("Palcidus")
+  					.topo(48.8555, 18.0488, 0)
+    				.zodiac("Fagan Bradley")	
+ 					.build();
+cuspEphemeris.toJSON();
+```
+	
 ```
 //Next transit Sun to point 36° in zodiac, geocentric			
 Transit transit = new TransitBuilder( LocalDateTime event )

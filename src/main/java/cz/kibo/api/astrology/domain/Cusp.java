@@ -35,6 +35,7 @@ public class Cusp extends Ephemeris{
 	 * 
 	 * @param event The date and the time of the event in Universal Time (UT).	
 	 * @param coords longitude, latitude, geoalt. 
+	 * @param houseSystem The house system as a character given as an integer.
 	 * @param iflag Options for sidereal or tropical calculation. 0 - tropical, SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_* - for sidereal. Dont use other flags!.
 	 * 
 	 * @see iflag @http://th-mack.de/download/swisseph-doc/swisseph/SwissEph.html#swe_set_sid_mode(int)

@@ -34,13 +34,13 @@ import swisseph.SweConst;
  * 
  * @author Tomas Jurman tomasjurman@gmail.com
  */
-public class PlanetBuilder {
+public class PlanetBuilder extends Builder{
 		
 	private final LocalDateTime event;
 	private final List<Integer> planetsList = new ArrayList<Integer>();
 	private Coordinates coords;
 	private int iflags = 0; // tropical default
-	
+		
 	/**
 	 * Creates Planet builder. 
 	 * 
@@ -118,20 +118,20 @@ public class PlanetBuilder {
 						
 		return this;
 	}
-	
+		
 	/**
 	 * Sets topocentric cordinate system.
 	 * 
 	 * @param lon The Longitude in degrees
      * @param lat The Latitude in degrees 
      * @param geoalt The height above sea level in meters
-	 * @return
+     * @return	
 	 */
 	public PlanetBuilder topo(double lon, double lat, double geoalt) {
-		this.coords = new Coordinates(lon, lat, geoalt);
+		this.coords = super.setTopo(lon, lat, geoalt);
 		return this;
 	}
-	
+		
 	/**
 	 * Sets sidereal mode
 	 * 
@@ -139,84 +139,10 @@ public class PlanetBuilder {
 	 * @return
 	 */
 	public PlanetBuilder zodiac(String siderealMode) {
-		switch (siderealMode.trim()) {
-		
-			case "Fagan Bradley": 
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_FAGAN_BRADLEY;
-				break;
-								
-			case "Lahiri": 
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_LAHIRI;
-				break;
-								
-			case "Deluce":
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_DELUCE;
-				break;
-			
-			case "Ramanb": 
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_RAMAN;
-				break;
-				
-			case "Ushashashi": 
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_USHASHASHI;
-				break;
-				
-			case "Krishnamurti": 
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_KRISHNAMURTI;
-				break;
-				
-			case "Djwhal Khul": 
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_DJWHAL_KHUL;
-				break;
-				
-			case "Yukteshwar": 
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_YUKTESHWAR;
-				break;
-				
-			case "Jn Bhasin": 
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_JN_BHASIN;
-				break;
-				
-			case "Babyl Kugler 1":
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_BABYL_KUGLER1;
-				break;
-				
-			case "Babyl Kugler 2":
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_BABYL_KUGLER2;
-				break;
-				
-			case "Babyl Kugler 3":
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_BABYL_KUGLER3;
-				break;
-				
-			case "Babyl Huber":
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_BABYL_HUBER;
-				break;
-				
-			case "Babyl Etpsc":
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_BABYL_ETPSC;
-				break;
-				
-			case "Aldebaran 10Tau":
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_ALDEBARAN_15TAU;
-				break;
-				
-			case "Hipparchos":
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_HIPPARCHOS;
-				break;
-				
-			case "Sassanian":
-				this.iflags = SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_SASSANIAN;
-				break;
-						
-			default: 
-				throw new IllegalArgumentException( "Unknown sidereal mode: " + siderealMode);
-		
-		}
-				
+		this.iflags = super.setZodiac(siderealMode);				
 		return this;
 	}
-	
+			
 	/**
 	 * Builds query
 	 * 
@@ -234,4 +160,34 @@ public class PlanetBuilder {
 				
 		return ephemeris;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((event == null) ? 0 : event.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PlanetBuilder other = (PlanetBuilder) obj;
+		if (event == null) {
+			if (other.event != null)
+				return false;
+		} else if (!event.equals(other.event))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "PlanetBuilder [event=" + event + "]";
+	}	
 }
