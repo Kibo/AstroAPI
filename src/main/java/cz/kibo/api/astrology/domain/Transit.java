@@ -15,7 +15,7 @@ import swisseph.TransitCalculator;
  * Representation of transit positions at a certain date and time.
  * 
  * All time events - input and output - are in Universal Time (UT).
- * This class should not be used alone. Use {@linkcz.kibo.api.astrology.builder.TransitBuilder} to create the correct instance of this class.
+ * This class should not be used alone. Use {@link cz.kibo.api.astrology.builder.TransitBuilder} to create the correct instance of this class.
  * 
  * @author Tomas Jurman tomasjurman@gmail.com
  *
@@ -155,6 +155,7 @@ public class Transit extends Ephemeris{
 	 * @param planet The transiting planet. Constants of planets are in {@link swisseph.SweConst}.
 	 * @param planet2 The second planet that will be transited by the first planet.
 	 * @param offset The desired transit degree.
+	 * @param coords longitude, latitude, geoalt for topocentric.
 	 * @param iflag Options for sidereal or tropical calculation. 0 - tropical, SweConst.SEFLG_SIDEREAL | SweConst.SE_SIDM_* - for sidereal .Dont use other flags!.
 	 * 
 	 * @see swisseph.SweConst
@@ -189,7 +190,7 @@ public class Transit extends Ephemeris{
 		this.transit = sw.getTransitUT(tc, sd.getJulDay(), backwards);		
 	}
 	
-	public LocalDateTime getTransit() {
+	public LocalDateTime getDate() {
 		SweDate sweDate = new SweDate(this.transit, SweDate.SE_GREG_CAL);		 		 		
 		return LocalDateTime.ofInstant(sweDate.getDate(0).toInstant(), ZoneOffset.UTC);
 	}
@@ -236,6 +237,6 @@ public class Transit extends Ephemeris{
 
 	@Override
 	public String toString() {
-		return "UTC: " + getTransit();
+		return "UTC: " + getDate();
 	}
 }

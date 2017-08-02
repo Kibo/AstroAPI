@@ -14,7 +14,7 @@ import swisseph.SwissEph;
  * Representation of planet ephemeris at a certain date and time.
  * 
  * All time events - input and output - are in Universal Time (UT).
- * This class should not be used alone. Use {@linkcz.kibo.api.astrology.builder.PlanetBuilder} to create the correct instance of this class.
+ * This class should not be used alone. Use {@link cz.kibo.api.astrology.builder.PlanetBuilder} to create the correct instance of this class.
  * 
  * @author Tomas Jurman tomasjurman@gmail.com
  *

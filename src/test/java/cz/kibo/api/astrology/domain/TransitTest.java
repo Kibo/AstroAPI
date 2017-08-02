@@ -21,14 +21,14 @@ public class TransitTest {
 		
 		LocalDateTime event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		Transit transit = new Transit( event, SweConst.SE_SUN, 90.0, iflag);
-		LocalDateTime date = transit.getTransit();				
+		LocalDateTime date = transit.getDate();				
 		
 		assertEquals( LocalDateTime.of( 2017, 6, 21, 4, 24), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
 		
 		
 		event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		transit = new Transit( event, SweConst.SE_MOON, 90.0, iflag);
-		date = transit.getTransit();	
+		date = transit.getDate();	
 		
 		assertEquals( LocalDateTime.of( 2017, 6, 23, 22, 06), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
 	}
@@ -42,14 +42,14 @@ public class TransitTest {
 		
 		LocalDateTime event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		Transit transit = new Transit( event, SweConst.SE_SUN, 90.0, coords, iflag);
-		LocalDateTime date = transit.getTransit();				
+		LocalDateTime date = transit.getDate();				
 		
 		assertEquals( LocalDateTime.of( 2017, 6, 21, 4, 21), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
 		
 		
 		event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		transit = new Transit( event, SweConst.SE_MOON, 90.0, coords, iflag);
-		date = transit.getTransit();	
+		date = transit.getDate();	
 		
 		assertEquals( LocalDateTime.of( 2017, 6, 23, 22, 15), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
 	}
@@ -61,13 +61,13 @@ public class TransitTest {
 					
 		LocalDateTime event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		Transit transit = new Transit( event, SweConst.SE_SUN, 90.0, iflag);
-		LocalDateTime date = transit.getTransit();				
+		LocalDateTime date = transit.getDate();				
 		
 		assertEquals( LocalDateTime.of( 2017, 7, 20, 14, 18), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
 				
 		event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		transit = new Transit( event, SweConst.SE_MOON, 90.0, iflag);
-		date = transit.getTransit();	
+		date = transit.getDate();	
 		
 		assertEquals( LocalDateTime.of( 2017, 6, 25, 18, 55), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));		
 	}
@@ -81,7 +81,7 @@ public class TransitTest {
 		
 		LocalDateTime event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		Transit transit = new Transit( event, SweConst.SE_SUN, 90.0, coords, iflag);
-		LocalDateTime date = transit.getTransit();				
+		LocalDateTime date = transit.getDate();				
 		
 		assertEquals( LocalDateTime.of( 2017, 7, 18, 12, 38), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
 		
@@ -90,7 +90,7 @@ public class TransitTest {
 		
 		event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		transit = new Transit( event, SweConst.SE_MOON, 90.0, coords, iflag);
-		date = transit.getTransit();	
+		date = transit.getDate();	
 		
 		assertEquals( LocalDateTime.of( 2017, 6, 25, 9, 16), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));		
 	}
@@ -102,14 +102,14 @@ public class TransitTest {
 		
 		LocalDateTime event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		Transit transit = new Transit( event, SweConst.SE_SUN, SweConst.SE_MOON, 0.0, iflag);
-		LocalDateTime date = transit.getTransit();				
+		LocalDateTime date = transit.getDate();				
 		
 		assertEquals( LocalDateTime.of( 2017, 6, 24, 2, 30), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
 		
 		
 		event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		transit = new Transit( event, SweConst.SE_SUN, SweConst.SE_MOON, 180.0, iflag);
-		date = transit.getTransit();	
+		date = transit.getDate();	
 		
 		assertEquals( LocalDateTime.of( 2017, 7, 9, 4, 06), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));		
 	}
@@ -123,14 +123,14 @@ public class TransitTest {
 		
 		LocalDateTime event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		Transit transit = new Transit( event, SweConst.SE_SUN, SweConst.SE_MOON, 0.0, coords, iflag);
-		LocalDateTime date = transit.getTransit();				
+		LocalDateTime date = transit.getDate();				
 		
 		assertEquals( LocalDateTime.of( 2017, 6, 24, 1, 43), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
 		
 		
 		event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		transit = new Transit( event, SweConst.SE_SUN, SweConst.SE_MOON, 180.0, coords, iflag);
-		date = transit.getTransit();	
+		date = transit.getDate();	
 		
 		assertEquals( LocalDateTime.of( 2017, 7, 9, 5, 33), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));				
 	}
@@ -142,13 +142,13 @@ public class TransitTest {
 		
 		LocalDateTime event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		Transit transit = new Transit( event, SweConst.SE_SUN, SweConst.SE_MOON, 0.0, iflag);
-		LocalDateTime date = transit.getTransit();				
+		LocalDateTime date = transit.getDate();				
 		
 		assertEquals( LocalDateTime.of( 2017, 6, 24, 2, 30), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
 				
 		event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		transit = new Transit( event, SweConst.SE_SUN, SweConst.SE_MOON, 180.0, iflag);
-		date = transit.getTransit();	
+		date = transit.getDate();	
 		
 		assertEquals( LocalDateTime.of( 2017, 7, 9, 4, 06), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));				
 	}
@@ -162,13 +162,13 @@ public class TransitTest {
 		
 		LocalDateTime event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		Transit transit = new Transit( event, SweConst.SE_SUN, SweConst.SE_MOON, 0.0, coords, iflag);
-		LocalDateTime date = transit.getTransit();				
+		LocalDateTime date = transit.getDate();				
 		
 		assertEquals( LocalDateTime.of( 2017, 6, 24, 1, 43), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
 				
 		event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
 		transit = new Transit( event, SweConst.SE_SUN, SweConst.SE_MOON, 180.0, coords, iflag);
-		date = transit.getTransit();	
+		date = transit.getDate();	
 		
 		assertEquals( LocalDateTime.of( 2017, 7, 9, 5, 33), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));						
 	}

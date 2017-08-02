@@ -2,6 +2,7 @@
 The AstroAPI is a simple API allowing consumers to get planets and cusps positions. The AstroAPI uses Swiss Ephemeris library port to Java by [Thomas Mack](http://th-mack.de/). AstroAPI is clear and tested API over this library.
 
 **Planets**:
+
 Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Chiron, Lilith, NNode.
 
 **House systems**:
@@ -16,7 +17,7 @@ Geocentric, Topocentric.
 
 Tropical, Sidereal
 
-### Version: 0.8
+### Version: 1.0.0
 
 ## Documentation
 - [High precision ephemeris developed by Astrodienst](http://www.astro.com/swisseph/swephinfo_e.htm)
@@ -24,7 +25,6 @@ Tropical, Sidereal
 
 ### Install
 - [set path](https://github.com/Kibo/AstroAPI/blob/master/src/main/resources/settings.properties) to ephemeris
-- mvn build
 - mvn package
 - mvn javadoc:javadoc
 
@@ -68,24 +68,26 @@ cuspEphemeris.toJSON();
 ```
 	
 ```
-// Tropical, the Moon in conjunction with the Sun.
- Transit time = new TransitBuilder(event)
+// Tropical, the Moon in opposition with the Sun.
+ Transit transit = new TransitBuilder(event)
   					.planet("Moon") 					
   					.toPlanet("Sun") 
+  					.aspect(180.0)
   					.build();
  	
- System.out.println(time);	
+ System.out.println( transit.getDate() );
 ```	
 
 ```
-// Sidereal, the Moon in conjunction with the point 36.3° in zodiac.
- Planet time = new PlanetBuilder(event)
+// Sidereal, the Moon in trine with the point 36.3° in zodiac.
+ Planet transit = new PlanetBuilder(event)
   					.planet('Moon')
   					.toPoint(36.3)
-   				.zodiac("Fagan Bradley")	
+  					.aspect(120.0)
+   					.zodiac("Fagan Bradley")	
  					.build();
  
-System.out.println(time);	
+System.out.println( transit.getDate() );
 ```					
 
 ## License
