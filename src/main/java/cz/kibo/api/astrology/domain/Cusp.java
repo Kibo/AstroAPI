@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cz.kibo.api.astrology.json.Convertor;
 import swisseph.SweConst;
 import swisseph.SweDate;
 import swisseph.SwissEph;
@@ -67,6 +68,15 @@ public class Cusp extends Ephemeris{
 	
 	public LocalDateTime getEvent() {		
 		return this.event;
+	}
+	
+	/**
+	 * Converts cusps positions to JSON string
+	 * @return
+	 */
+	public String toJSON() {
+		Convertor convertor = new Convertor( getCusps() );
+		return convertor.getJSON().toString();
 	}
 		
 	private List<Double> calculateCusps( SwissEph calculator, SweDate date, Integer hSystem, Coordinates coordinates, int flags ){

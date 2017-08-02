@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cz.kibo.api.astrology.json.Convertor;
 import swisseph.SweConst;
 import swisseph.SweDate;
 import swisseph.SwissEph;
@@ -96,7 +97,16 @@ public class Planet extends Ephemeris{
 	
 	public LocalDateTime getEvent() {		
 		return this.event;
-	}	
+	}
+	
+	/**
+	 * Converts planets positions to JSON string
+	 * @return
+	 */
+	public String toJSON() {
+		Convertor convertor = new Convertor( getPlanets() );
+		return convertor.getJSON().toString();
+	}
 
 	private Map<String, List<Double>> calculatePlanets( List<Integer> planets, SwissEph calculator, SweDate date, int flags ) {
 		Map<String, List<Double>> data = new HashMap<String, List<Double>>();
