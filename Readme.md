@@ -32,9 +32,9 @@ Tropical, Sidereal
 ``` 
 // Topocentric, tropical, all planets.
 Planet planetEphemeris = new PlanetBuilder(event)
-  					.planets() 					
-  					.topo(48.8555, 18.0488, 0)
-  					.build();
+  				.planets() 					
+  				.topo(48.8555, 18.0488, 0)
+  				.build();
 planetEphemeris.toJSON();
 
 ```
@@ -42,38 +42,38 @@ planetEphemeris.toJSON();
 ```
 // Geocentric, sidereal, Sun and Moon only.
 Planet planetEphemeris = new PlanetBuilder(event)
- 					.planet('Sun, Moon')
-					.zodiac("Fagan Bradley")	
-					.build();
+ 				.planet('Sun, Moon')
+				.zodiac("Fagan Bradley")	
+				.build();
 planetEphemeris.toJSON();				
 ```	
 
 ```
  // Tropical, Campanus.
  Cusp cuspEphemeris = new CuspBuilder(event)
-  					.houses("Campanus") 					
-  					.topo(48.8555, 18.0488, 0)
-  					.build();
+  				.houses("Campanus") 					
+  				.topo(48.8555, 18.0488, 0)
+  				.build();
  cuspEphemeris.toJSON();
 ```	
 
 ```
 // Sidereal, Placidus
 Cusp cuspEphemeris = new CuspBuilder(event)
-  					.houses("Palcidus")
-  					.topo(48.8555, 18.0488, 0)
-    					.zodiac("Fagan Bradley")	
- 					.build();
+  				.houses("Palcidus")
+  				.topo(48.8555, 18.0488, 0)
+    				.zodiac("Fagan Bradley")	
+ 				.build();
 cuspEphemeris.toJSON();
 ```
 	
 ```
 // Tropical, the Moon in opposition with the Sun.
  Transit transit = new TransitBuilder(event)
-  					.planet("Moon") 					
-  					.toPlanet("Sun") 
-  					.aspect(180.0)
-  					.build();
+  				.planet("Moon") 					
+  				.toPlanet("Sun") 
+  				.aspect(180.0)
+  				.build();
  	
  System.out.println( transit.getDate() );
 ```	
@@ -81,11 +81,11 @@ cuspEphemeris.toJSON();
 ```
 // Sidereal, the Moon in trine with the point 36.3° in zodiac.
  Planet transit = new PlanetBuilder(event)
-  					.planet('Moon')
-  					.toPoint(36.3)
-  					.aspect(120.0)
-   					.zodiac("Fagan Bradley")	
- 					.build();
+  				.planet('Moon')
+  				.toPoint(36.3)
+  				.aspect(120.0)
+   				.zodiac("Fagan Bradley")	
+ 				.build();
  
 System.out.println( transit.getDate() );
 ```					
