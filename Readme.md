@@ -25,7 +25,7 @@ Tropical, Sidereal
 
 ### Install
 - [set path](https://github.com/Kibo/AstroAPI/blob/master/src/main/resources/settings.properties) to ephemeris
-- mvn package
+- mvn clean package
 - mvn javadoc:javadoc
 
 ### Example

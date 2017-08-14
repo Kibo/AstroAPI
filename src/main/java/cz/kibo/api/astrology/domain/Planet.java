@@ -34,7 +34,7 @@ public class Planet extends Ephemeris{
 	
 	
 	/**
-	 * Calculates planets positions. Planets in geocentric cordinate system.
+	 * Calculates planets positions. Planets in geocentric coordinate system.
 	 * 
 	 * @param event The date and the time of the event in Universal Time (UT).
 	 * @param planets List of planets for position calculation. Constants of planets are in {@link swisseph.SweConst}.
