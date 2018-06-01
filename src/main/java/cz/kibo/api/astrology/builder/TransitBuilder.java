@@ -47,6 +47,7 @@ public class TransitBuilder extends Builder{
 	private Double point;
 	private int iflags = 0; // tropical default
 	private double aspect = 0.0; // default
+	private boolean backwards = false;
 	
 	/**
 	 * Creates Transit builder. 
@@ -108,6 +109,17 @@ public class TransitBuilder extends Builder{
 	}
 	
 	/**
+	 * Sets the direction of counting
+	 * 
+	 * @param backwards 
+	 * @return
+	 */
+	public TransitBuilder backwards( boolean backwards ) {
+		this.backwards = backwards;
+		return this;
+	}
+	
+	/**
 	 * Sets sidereal mode
 	 * 
 	 * @param siderealMode sidereal mode
@@ -143,18 +155,19 @@ public class TransitBuilder extends Builder{
 		if(this.point == null) { // to planet
 			
 			if(this.coords == null) { // geocentric
-				trasit = new Transit(this.event, this.planet, this.planet2, this.aspect, this.iflags);
+				trasit = new Transit(this.event, this.planet, this.planet2, this.aspect, this.iflags, this.backwards);
 				
 			}else { // topocentric
-				trasit = new Transit(this.event, this.planet, this.planet2, this.aspect, this.coords, this.iflags);
+				trasit = new Transit(this.event, this.planet, this.planet2, this.aspect, this.coords, this.iflags, this.backwards);
 			}
 						
 		}else { // to point
 			
 			if(this.coords == null) { // geocentric
-				trasit = new Transit(this.event, this.planet, (this.point + this.aspect), this.iflags);
+				trasit = new Transit(this.event, this.planet, (this.point + this.aspect), this.iflags, this.backwards);
+				
 			}else { // topocentric
-				trasit = new Transit(this.event, this.planet, (this.point + this.aspect), this.coords, this.iflags);
+				trasit = new Transit(this.event, this.planet, (this.point + this.aspect), this.coords, this.iflags, this.backwards);
 			}			
 		}
 					

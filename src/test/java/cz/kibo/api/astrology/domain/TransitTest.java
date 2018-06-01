@@ -34,6 +34,25 @@ public class TransitTest {
 	}
 	
 	@Test
+	public void planetToPointGeocentricBackwardTest() {
+		
+		int iflag = 0; // tropical
+		
+		LocalDateTime event = LocalDateTime.of( 2017, 6, 25, 0, 0);		
+		Transit transit = new Transit( event, SweConst.SE_SUN, 90.0, iflag, true);
+		LocalDateTime date = transit.getDate();				
+		
+		assertEquals( LocalDateTime.of( 2017, 6, 21, 4, 24), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
+		
+		
+		event = LocalDateTime.of( 2017, 6, 18, 0, 0);		
+		transit = new Transit( event, SweConst.SE_MOON, 90.0, iflag, true);
+		date = transit.getDate();	
+		
+		assertEquals( LocalDateTime.of( 2017, 5, 27, 11, 24), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));
+	}
+		
+	@Test
 	public void planetToPointTopocentricTest() {
 		
 		int iflag = 0; // tropical
