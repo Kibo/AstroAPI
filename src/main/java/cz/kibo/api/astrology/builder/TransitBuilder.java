@@ -30,7 +30,8 @@ import cz.kibo.api.astrology.domain.Transit;
  * 					.planet('Moon')
  * 					.toPoint(36.3)
  * 					.aspect(120.0) 					
- *  				.zodiac("Fagan Bradley")	
+ *  				.zodiac("Fagan Bradley")
+ *  				.backwards(true)	
  *					.build();
  *
  *	System.out.println( transit.getTransit() );
