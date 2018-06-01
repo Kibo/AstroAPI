@@ -79,12 +79,13 @@ cuspEphemeris.toJSON();
 ```	
 
 ```
-// Sidereal, the Moon in trine with the point 36.3° in zodiac.
+// Sidereal, the Moon in trine with the point 36.3° in zodiac. Backwards.
  Planet transit = new PlanetBuilder(event)
   				.planet('Moon')
   				.toPoint(36.3)
   				.aspect(120.0)
    				.zodiac("Fagan Bradley")	
+   				.backwards(true)
  				.build();
  
 System.out.println( transit.getDate() );

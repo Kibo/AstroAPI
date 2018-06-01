@@ -74,6 +74,21 @@ public class TransitBuilderTest {
 		assertEquals( LocalDateTime.of( 2017, 6, 17, 17, 54), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));													
 	}
 	
+	@Test
+	public void planeToPointBackwardsTest() {
+		
+		LocalDateTime event = LocalDateTime.of( 2017, 6, 20, 0, 0);		
+		Transit transit = new TransitBuilder( event)
+										.planet("Moon")
+										.toPoint(0.0)
+										.backwards(true)
+										.build();
+		
+		LocalDateTime date = transit.getDate();				
+		
+		assertEquals( LocalDateTime.of( 2017, 6, 17, 17, 54), LocalDateTime.of( date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute()));													
+	}
+	
 	
 	@Test
 	public void planetToPlanetGeocentricTest() {
