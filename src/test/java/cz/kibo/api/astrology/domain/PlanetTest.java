@@ -1,13 +1,12 @@
 package cz.kibo.api.astrology.domain;
 
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Test;
 
 import swisseph.SweConst;
 

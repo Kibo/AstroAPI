@@ -4,7 +4,7 @@
 
   <groupId>cz.kibo.api</groupId>
   <artifactId>astrologyAPI</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <packaging>jar</packaging>
 
   <name>astrology</name>
@@ -23,6 +23,14 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
+    
+	<dependency>
+	    <groupId>org.testng</groupId>
+	    <artifactId>testng</artifactId>
+	    <version>6.14.3</version>
+	    <scope>test</scope>
+	</dependency>
+    
     <dependency>
     	<groupId>org.json</groupId>
     	<artifactId>json</artifactId>

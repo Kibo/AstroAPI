@@ -486,7 +486,7 @@ byte[] ba=new byte[2*SwissData.AS_MAXCH];
    * of several of the popular FDDI "MAC" chips.
    */
   /* unsigned long [...] */
-  static long crc32_table[]=null;
+  long crc32_table[]=null;
   /* Initialized first time "crc32()" is called. If you prefer, you can
    * statically initialize it at compile time. [Another exercise.]
    */

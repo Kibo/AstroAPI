@@ -6,7 +6,7 @@ import swisseph.SweConst;
 public abstract class Builder {
 		
 	/**
-	 * Get cordinate.
+	 * Get coordinate.
 	 * 
 	 * @param lon The Longitude in degrees
      * @param lat The Latitude in degrees 
